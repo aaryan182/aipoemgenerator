@@ -23,7 +23,7 @@ const config: Config = {
         // ...
         colors: {
           primary: {
-            DEFAULT: "#FF5733"
+            DEFAULT: "#03A9C6"
           }
         },
       },
@@ -31,7 +31,7 @@ const config: Config = {
         // ...
         colors: {
           primary: {
-            DEFAULT: "#FF5733"
+            DEFAULT: "#03A9C6"
           }
         },
       },
