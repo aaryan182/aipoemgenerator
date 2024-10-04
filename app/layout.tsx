@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={MyAppFont.className}
+        className={MyAppFont.className + " bg-black"}
       >
         <Provider>{children}</Provider>
       </body>

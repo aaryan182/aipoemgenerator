@@ -39,7 +39,7 @@ function Header() {
     <Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpen}>
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        className="sm:hidden"
+        className="sm:hidden bg-black"
       />
       <NavbarContent>
         <NavbarBrand>
