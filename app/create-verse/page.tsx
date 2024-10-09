@@ -11,6 +11,7 @@ import { VerseData } from "@/config/schema";
 // @ts-ignore
 import uuid4 from "uuid4";
 import CustomLoader from "./_components/CustomLoader";
+import axios from "axios";
 
 const CREATE_STORY_PROMPT = process.env.NEXT_PUBLIC_CREATE_STORY_PROMPT;
 
@@ -48,6 +49,15 @@ function CreateVerse() {
       .replace("{imageStyle}", formData?.imageStyle ?? "");
     try {
       const result = await chatSession.send(FINAL_PROMPT);
+      const verse = JSON.parse(result?.response.text());
+      const imageResponse = await axios.post("/api/generate-image", {
+        prompt:
+          "Add text with title:" +
+          verse?.verse_cover?.title +
+          "in bold text for verse cover," +
+          verse?.verse_cover?.image_prompt,
+      });
+      console.log(imageResponse?.data);
       console.log(result?.response.text());
       const response = await SaveInDB(result?.response.text());
       console.log(response);
@@ -73,8 +83,8 @@ function CreateVerse() {
           output: JSON.parse(output),
         })
         .returning({ verseId: VerseData?.verseId });
-        setLoading(false);
-        return result;
+      setLoading(false);
+      return result;
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -105,7 +115,7 @@ function CreateVerse() {
           Generate Verse
         </Button>
       </div>
-      <CustomLoader isLoading={loading}/>
+      <CustomLoader isLoading={loading} />
     </div>
   );
 }

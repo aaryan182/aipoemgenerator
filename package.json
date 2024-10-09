@@ -21,11 +21,13 @@
     "@nextui-org/react": "^2.4.8",
     "@nextui-org/system": "^2.2.6",
     "@nextui-org/theme": "^2.2.11",
+    "axios": "^1.7.7",
     "drizzle-orm": "^0.33.0",
     "framer-motion": "^11.9.0",
     "next": "14.2.14",
     "react": "^18",
     "react-dom": "^18",
+    "replicate": "^0.34.1",
     "uuid4": "^2.0.3"
   },
   "devDependencies": {
