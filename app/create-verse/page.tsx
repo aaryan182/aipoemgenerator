@@ -13,6 +13,7 @@ import uuid4 from "uuid4";
 import CustomLoader from "./_components/CustomLoader";
 import axios from "axios";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "react-toastify";
 
 const CREATE_STORY_PROMPT = process.env.NEXT_PUBLIC_CREATE_STORY_PROMPT;
 
@@ -32,6 +33,8 @@ function CreateVerse() {
   const [formData, setFormData] = useState<formDataType>();
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useUser();
+  const notify = (message: string) => toast("Verse Created", { type: "success" });
+  const notifyError = (message: string) => toast(message, { type: "error" });
   const onHandleUserSelection = (data: fieldData) => {
     setFormData((prev: any) => ({
       ...prev,
@@ -71,9 +74,11 @@ function CreateVerse() {
         FirebaseStorageImageUrl
       );
       console.log(response);
+      notify("Verse Created");
       setLoading(false);
     } catch (error) {
       console.log(error);
+      notifyError("server error , try again!");
       setLoading(false);
     }
   };
