@@ -12,6 +12,7 @@ import { VerseData } from "@/config/schema";
 import uuid4 from "uuid4";
 import CustomLoader from "./_components/CustomLoader";
 import axios from "axios";
+import { useUser } from "@clerk/nextjs";
 
 const CREATE_STORY_PROMPT = process.env.NEXT_PUBLIC_CREATE_STORY_PROMPT;
 
@@ -30,6 +31,7 @@ export interface formDataType {
 function CreateVerse() {
   const [formData, setFormData] = useState<formDataType>();
   const [loading, setLoading] = useState<boolean>(false);
+  const { user } = useUser();
   const onHandleUserSelection = (data: fieldData) => {
     setFormData((prev: any) => ({
       ...prev,
@@ -57,9 +59,17 @@ function CreateVerse() {
           "in bold text for verse cover," +
           verse?.verse_cover?.image_prompt,
       });
-      console.log(imageResponse?.data);
-      console.log(result?.response.text());
-      const response = await SaveInDB(result?.response.text());
+      const AiImageUrl = imageResponse?.data?.imageUrl;
+      const imageResult = await axios.post("/api/save-image", {
+        url: AiImageUrl,
+      });
+
+      const FirebaseStorageImageUrl = imageResult?.data?.imageUrl;
+
+      const response = await SaveInDB(
+        result?.response.text(),
+        FirebaseStorageImageUrl
+      );
       console.log(response);
       setLoading(false);
     } catch (error) {
@@ -68,7 +78,7 @@ function CreateVerse() {
     }
   };
 
-  const SaveInDB = async (output: string) => {
+  const SaveInDB = async (output: string, imageUrl: string) => {
     const recordId = uuid4();
     setLoading(true);
     try {
@@ -81,6 +91,10 @@ function CreateVerse() {
           verseSubject: formData?.verseSubject,
           verseType: formData?.verseType,
           output: JSON.parse(output),
+          coverImage: imageUrl,
+          userEmail: user?.primaryEmailAddress?.emailAddress,
+          userImage: user?.imageUrl,
+          userName: user?.fullName,
         })
         .returning({ verseId: VerseData?.verseId });
       setLoading(false);
